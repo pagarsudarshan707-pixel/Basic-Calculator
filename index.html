@@ -4,15 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simple Calculator</title>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-GJ5L1NZSXZ"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
 
-  gtag('config', 'G-GJ5L1NZSXZ');
-</script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GJ5L1NZSXZ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-GJ5L1NZSXZ');
+    </script>
 
     <style>
         body {
@@ -22,15 +21,14 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+            margin: 0;
         }
-
         .calculator {
             background: #2c2c3e;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 15px rgba(0,0,0,0.5);
         }
-
         #display {
             width: 100%;
             height: 50px;
@@ -40,14 +38,13 @@
             text-align: right;
             border: none;
             border-radius: 5px;
+            box-sizing: border-box;
         }
-
         .buttons {
             display: grid;
             grid-template-columns: repeat(4, 70px);
             gap: 10px;
         }
-
         button {
             padding: 15px;
             font-size: 18px;
@@ -57,41 +54,28 @@
             color: white;
             cursor: pointer;
         }
-
-        button:hover {
-            background: #6a6a9c;
-        }
-
-        .equal {
-            background: #28a745;
-        }
-
-        .clear {
-            background: #dc3545;
-        }
+        button:hover { background: #6a6a9c; }
+        .equal { background: #28a745; }
+        .clear { background: #dc3545; }
     </style>
 </head>
 <body>
 
 <div class="calculator">
     <input type="text" id="display" disabled>
-
     <div class="buttons">
         <button onclick="clearDisplay()" class="clear">C</button>
         <button onclick="appendValue('/')">/</button>
         <button onclick="appendValue('*')">*</button>
         <button onclick="appendValue('-')">-</button>
-
         <button onclick="appendValue('7')">7</button>
         <button onclick="appendValue('8')">8</button>
         <button onclick="appendValue('9')">9</button>
         <button onclick="appendValue('+')">+</button>
-
         <button onclick="appendValue('4')">4</button>
         <button onclick="appendValue('5')">5</button>
         <button onclick="appendValue('6')">6</button>
         <button onclick="calculate()" class="equal">=</button>
-
         <button onclick="appendValue('1')">1</button>
         <button onclick="appendValue('2')">2</button>
         <button onclick="appendValue('3')">3</button>
@@ -100,36 +84,32 @@
 </div>
 
 <script>
+    // Helper function to send events safely
+    function trackEvent(action, label) {
+        if (typeof gtag === 'function') {
+            gtag('event', action, {
+                'event_category': 'Calculator',
+                'event_label': label
+            });
+        }
+    }
+
     function appendValue(value) {
         document.getElementById("display").value += value;
-
-        // Track button click in Google Analytics
-        gtag('event', 'button_click', {
-            'event_category': 'Calculator',
-            'event_label': value
-        });
+        trackEvent('button_click', value);
     }
 
     function clearDisplay() {
         document.getElementById("display").value = "";
-
-        gtag('event', 'clear', {
-            'event_category': 'Calculator'
-        });
+        trackEvent('clear', 'all');
     }
 
     function calculate() {
         let display = document.getElementById("display");
-
         try {
             let result = eval(display.value);
             display.value = result;
-
-            gtag('event', 'calculate', {
-                'event_category': 'Calculator',
-                'event_label': result
-            });
-
+            trackEvent('calculate', result.toString());
         } catch {
             display.value = "Error";
         }
